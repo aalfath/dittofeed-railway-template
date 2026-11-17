@@ -1,3 +1,5 @@
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/dittofeed-3?utm_medium=integration&utm_source=button&utm_campaign=dittofeed)
+
 # Dittofeed on Railway
 
 This repo is the source of the **Dittofeed** template on Railway. [Dittofeed](https://github.com/dittofeed/dittofeed) is an open-source (MIT) customer engagement platform: send transactional and marketing messages by email, SMS, mobile push, WhatsApp, Slack and webhooks, driven by user segments and journeys.
