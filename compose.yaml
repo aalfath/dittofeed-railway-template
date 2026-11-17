@@ -1,0 +1,47 @@
+# Local test only (Railway does not read this file).
+services:
+  postgres:
+    image: postgres:17-alpine
+    labels: [her=2496]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PGPASS:?set PGPASS}
+    volumes: [pgdata:/var/lib/postgresql/data]
+  temporal:
+    build: ./temporal
+    labels: [her=2496]
+    environment:
+      POSTGRES_SEEDS: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PWD: ${PGPASS}
+    depends_on: [postgres]
+  clickhouse:
+    build: ./clickhouse
+    labels: [her=2496]
+    environment:
+      CLICKHOUSE_USER: dittofeed
+      CLICKHOUSE_PASSWORD: ${CHPASS:?set CHPASS}
+    volumes: [chdata:/var/lib/clickhouse]
+  dittofeed:
+    build: ./dittofeed
+    labels: [her=2496]
+    environment:
+      PORT: "3000"
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${PGPASS}
+      CLICKHOUSE_HOST: http://clickhouse:8123
+      CLICKHOUSE_USER: dittofeed
+      CLICKHOUSE_PASSWORD: ${CHPASS}
+      TEMPORAL_ADDRESS: temporal:7233
+      PASSWORD: ${APPPASS:?set APPPASS}
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY}
+      DASHBOARD_URL: http://localhost:42496
+      DASHBOARD_API_BASE: http://localhost:42496
+      SESSION_COOKIE_SECURE: "false"
+    ports: ["42496:3000"]
+    depends_on: [postgres, temporal, clickhouse]
+volumes:
+  pgdata:
+  chdata:
